@@ -10,6 +10,7 @@ namespace RandoSBRCO;
 public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
 {
     public static RandoSBRCO Instance;
+    public override string GetVersion() => GetType().Assembly.GetName().Version.ToString();
 
     public SBRCOSettings GS { get; private set; } = new SBRCOSettings();
     public void OnLoadGlobal(SBRCOSettings s) => GS = s;
