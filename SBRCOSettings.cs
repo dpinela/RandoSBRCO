@@ -16,7 +16,7 @@ public class SBRCOSettings
 
     [MenuIgnore]
     public List<string> GetCharmOrder() =>
-        Data.KthPermutation(40, new BigInteger(Convert.FromBase64String(SBRCode).Reverse().ToArray()))
+        Data.KthPermutation(55, new BigInteger(Convert.FromBase64String(SBRCode).Reverse().ToArray()))
             .Select(i => Data.VanillaCharmOrder[i])
             .ToList();
 }

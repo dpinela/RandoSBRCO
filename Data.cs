@@ -50,6 +50,21 @@ public static class Data
         "Dreamshield",
         "Weaversong",
         "Grimmchild",
+        "Bluemoth_Wings",
+        "Antigravity_Amulet",
+        "Lemm's_Strength",
+        "Florist's_Blessing",
+        "Snail_Slash",
+        "Snail_Soul",
+        "Shaman_Amp",
+        "Nitro_Crystal",
+        "Crystalmaster",
+        "Disinfectant_Flask",
+        "Millibelle's_Blessing",
+        "Greedsong",
+        "Marissa's_Audience",
+        "Chaos_Orb",
+        "Vespa's_Vengeance"
     };
 
     public static IEnumerable<int> KthPermutation(int n, BigInteger k)
