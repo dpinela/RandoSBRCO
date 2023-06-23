@@ -49,7 +49,11 @@ public static class Data
         "Sprintmaster",
         "Dreamshield",
         "Weaversong",
-        "Grimmchild",
+        "Grimmchild"
+    };
+
+    public static readonly string[] TranscendenceCharmOrder = new []
+    {
         "Bluemoth_Wings",
         "Antigravity_Amulet",
         "Lemm's_Strength",
@@ -66,6 +70,10 @@ public static class Data
         "Chaos_Orb",
         "Vespa's_Vengeance"
     };
+
+    internal static string Charm(int i) => i < VanillaCharmOrder.Length ?
+        VanillaCharmOrder[i] :
+        TranscendenceCharmOrder[i - VanillaCharmOrder.Length];
 
     public static IEnumerable<int> KthPermutation(int n, BigInteger k)
     {

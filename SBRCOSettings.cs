@@ -15,8 +15,10 @@ public class SBRCOSettings
     public string SBRCode { get; set; }
 
     [MenuIgnore]
-    public List<string> GetCharmOrder() =>
-        Data.KthPermutation(55, new BigInteger(Convert.FromBase64String(SBRCode).Reverse().ToArray()))
-            .Select(i => Data.VanillaCharmOrder[i])
+    public List<int> GetCharmOrder()
+    {
+        var allCharms = Data.VanillaCharmOrder.Concat(Data.TranscendenceCharmOrder).ToList();
+        return Data.KthPermutation(55, new BigInteger(Convert.FromBase64String(SBRCode).Reverse().ToArray()))
             .ToList();
+    }   
 }
