@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ItemChanger;
+using ItemChanger.Placements;
 using Modding;
 using RandomizerCore.Logic;
 using RandomizerMod.RandomizerData;
@@ -36,7 +37,7 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
     }
 
     private static Cost NCharmCost(int n) =>
-        new PDIntCost(n, nameof(PlayerData.charmsOwned), $"{n} previous charms required");
+        new PDIntCost(n, nameof(PlayerData.charmsOwned), $"{n} previous charms required.");
     
     private void EditCosts(RequestBuilder rb)
     {
@@ -54,7 +55,7 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
             
             if (sc.term.Name == "WHITEFRAGMENT" && sc.threshold == 2)
             {
-                c = NCharmCost(charms.IndexOf(35));
+                c = NCharmCost(charms.IndexOf(35) + 1);
                 Log($"Converting {lc} to {c}");
                 return true;
             }
@@ -63,7 +64,7 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
                 var i = charms.FindIndex(j => Data.Charm(j) == sc.term.Name);
                 if (i != -1)
                 {
-                    c = NCharmCost(i);
+                    c = NCharmCost(i + 1);
                     Log($"Converting {lc} to {c}");
                     return true;
                 }
@@ -71,6 +72,36 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
             c = default;
             return false;
         });
+
+        var vanillaShopCharms = new (string, DefaultShopItems) []
+        {
+            (LocationNames.Sly, DefaultShopItems.SlyCharms),
+            (LocationNames.Sly_Key, DefaultShopItems.SlyKeyCharms),
+            (LocationNames.Iselda, DefaultShopItems.IseldaCharms),
+            (LocationNames.Salubra, DefaultShopItems.SalubraCharms),
+            (LocationNames.Leg_Eater, DefaultShopItems.LegEaterCharms)
+        };
+
+        foreach (var (shop, shopCharms) in vanillaShopCharms)
+        {
+            rb.EditLocationRequest(shop, info =>
+            {
+                var orig = info.customPlacementFetch;
+                info.customPlacementFetch = (factory, placement) =>
+                {
+                    var p = orig(factory, placement);
+                    if (p is ShopPlacement sp)
+                    {
+                        sp.defaultShopItems &= ~shopCharms;
+                    }
+                    else
+                    {
+                        LogWarn($"placement for shop {shop} isn't a ShopPlacement; can't remove vanilla charms");
+                    }
+                    return p;
+                };
+            });
+        }
 
         for (var i = 1; i < charms.Count; i++)
         {
