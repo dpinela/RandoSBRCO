@@ -82,6 +82,23 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
             (LocationNames.Leg_Eater, DefaultShopItems.LegEaterCharms)
         };
 
+        var vanillaCharmCosts = new Dictionary<string, int>()
+        {
+            {ItemNames.Gathering_Swarm, 301},
+            {ItemNames.Stalwart_Shell, 201},
+            {ItemNames.Heavy_Blow, 351},
+            {ItemNames.Sprintmaster, 401},
+            {ItemNames.Wayward_Compass, 221},
+            {ItemNames.Lifeblood_Heart, 251},
+            {ItemNames.Longnail, 301},
+            {ItemNames.Steady_Body, 121},
+            {ItemNames.Shaman_Stone, 221},
+            {ItemNames.Quick_Focus, 801},
+            {ItemNames.Fragile_Heart, 351},
+            {ItemNames.Fragile_Greed, 251},
+            {ItemNames.Fragile_Strength, 601}
+        };
+
         foreach (var (shop, shopCharms) in vanillaShopCharms)
         {
             rb.EditLocationRequest(shop, info =>
@@ -142,10 +159,17 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
                     rb.RemoveFromVanilla(oldVD);
                     Log($"Amending {oldVD.Item} at {oldVD.Location} to require {previousCharm}");
                     var newCost = previousCharm == "KINGSOUL" ? new CostDef("WHITEFRAGMENT", 2) : new CostDef(previousCharm, 1);
-                    var newCosts = oldVD.Costs is { } oldCosts
-                        ? oldCosts.Append(newCost).ToArray()
-                        : new[] { newCost };
-                    rb.AddToPreplaced(new VanillaDef(oldVD.Item, oldVD.Location, newCosts));
+                    var newCosts = new List<CostDef>();
+                    if (oldVD.Costs != null)
+                    {
+                        newCosts.AddRange(oldVD.Costs);
+                    }
+                    newCosts.Add(newCost);
+                    if (vanillaCharmCosts.TryGetValue(oldVD.Item, out var geo))
+                    {
+                        newCosts.Add(new("GEO", geo));
+                    }
+                    rb.AddToPreplaced(new VanillaDef(oldVD.Item, oldVD.Location, newCosts.ToArray()));
                 }
             }
         }
