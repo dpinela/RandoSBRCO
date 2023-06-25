@@ -49,7 +49,7 @@ namespace RandoSBRCO
             try
             {
                 var charms = RandoSBRCO.Instance.GS.GetCharmOrder();
-                CharmList.Text.text = string.Join("\n", charms.Select(i => Data.VanillaCharmOrder[i]).Take(5));
+                CharmList.Text.text = string.Join("\n", charms.Select(Data.Charm).Take(5));
                 if (charms.Count > 5) CharmList.Text.text += "\n...";
             }
             catch (Exception e)
