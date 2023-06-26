@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ItemChanger;
+using ItemChanger.Tags;
 using ItemChanger.Placements;
 using Modding;
 using RandomizerCore.Logic;
@@ -119,6 +120,30 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
                 };
             });
         }
+
+        rb.EditLocationRequest(LocationNames.Grubfather, info =>
+        {
+            var orig = info.customPlacementFetch;
+            info.customPlacementFetch = (factory, placement) =>
+            {
+                var p = orig(factory, placement);
+                var t = p.GetOrAddTag<DestroyGrubRewardTag>();
+                t.destroyRewards |= GrubfatherRewards.Grubsong | GrubfatherRewards.GrubberflysElegy;
+                return p;
+            };
+        });
+
+        rb.EditLocationRequest(LocationNames.Seer, info =>
+        {
+            var orig = info.customPlacementFetch;
+            info.customPlacementFetch = (factory, placement) =>
+            {
+                var p = orig(factory, placement);
+                var t = p.GetOrAddTag<DestroySeerRewardTag>();
+                t.destroyRewards |= SeerRewards.DreamWielder;
+                return p;
+            };
+        });
 
         for (var i = 1; i < charms.Count; i++)
         {
