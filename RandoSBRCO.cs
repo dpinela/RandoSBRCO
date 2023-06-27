@@ -83,6 +83,14 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
             (LocationNames.Leg_Eater, DefaultShopItems.LegEaterCharms)
         };
 
+        // Rando is not aware of the vanilla costs of shop charms, so we must restore them
+        // ourselves.
+        // Normally, every item placed at a shop gets a -1 geo cost set, which is replaced
+        // during onRandomizerFinish with a randomized cost. However, preplaced items do not
+        // receive the randomized cost and keep the -1 instead. This is a bug in rando,
+        // which allows us to compensate for the -1 by increasing all of these costs by 1.
+        // When the bug is fixed, we can instead override onRandomizerFinish on these items
+        // and replace the -1 with the actual cost of the charms.
         var vanillaCharmCosts = new Dictionary<string, int>()
         {
             {ItemNames.Gathering_Swarm, 301},
