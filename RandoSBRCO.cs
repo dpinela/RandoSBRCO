@@ -6,6 +6,7 @@ using ItemChanger.Placements;
 using Modding;
 using RandomizerCore.Logic;
 using RandomizerMod.RandomizerData;
+using RandomizerMod.IC;
 using RandomizerMod.RC;
 
 namespace RandoSBRCO;
@@ -108,6 +109,12 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
             {ItemNames.Fragile_Strength, 601}
         };
 
+        var vanillaGrubCosts = new Dictionary<string, int>()
+        {
+            {ItemNames.Grubsong, 10},
+            {ItemNames.Grubberflys_Elegy, 46}
+        };
+
         foreach (var (shop, shopCharms) in vanillaShopCharms)
         {
             rb.EditLocationRequest(shop, info =>
@@ -139,6 +146,22 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
                 t.destroyRewards |= GrubfatherRewards.Grubsong | GrubfatherRewards.GrubberflysElegy;
                 return p;
             };
+            // Rando adds its own randomized cost to all Grubfather and Seer locations, even for items
+            // that already have grub/essence costs of their own already, and offers no way to prevent
+            // this at the source. This is the next best thing, but it means the extraneous costs
+            // still affect logic.
+            info.customAddToPlacement = (factory, randoPlacement, icPlacement, item) =>
+            {
+                if (randoPlacement.Location is RandoModLocation rl && rl.costs != null)
+                {
+                    if (vanillaGrubCosts.TryGetValue(item.name, out var g))
+                    {
+                        rl.costs.RemoveAll(c => c is SimpleCost sc && sc.term.Name == "GRUBS" && sc.threshold != g);
+                    }
+                    CostConversion.HandleCosts(factory, rl.costs, item, icPlacement);
+                }
+                icPlacement.Add(item);
+            };
         });
 
         rb.EditLocationRequest(LocationNames.Seer, info =>
@@ -150,6 +173,18 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
                 var t = p.GetOrAddTag<DestroySeerRewardTag>();
                 t.destroyRewards |= SeerRewards.DreamWielder;
                 return p;
+            };
+            info.customAddToPlacement = (factory, randoPlacement, icPlacement, item) =>
+            {
+                if (randoPlacement.Location is RandoModLocation rl && rl.costs != null)
+                {
+                    if (item.name == ItemNames.Dream_Wielder)
+                    {
+                        rl.costs.RemoveAll(c => c is SimpleCost sc && sc.term.Name == "ESSENCE" && sc.threshold != 500);
+                    }
+                    CostConversion.HandleCosts(factory, rl.costs, item, icPlacement);
+                }
+                icPlacement.Add(item);
             };
         });
 
