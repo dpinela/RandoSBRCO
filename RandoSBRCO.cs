@@ -3,6 +3,7 @@ using System.Linq;
 using ItemChanger;
 using ItemChanger.Tags;
 using ItemChanger.Placements;
+using ItemChanger.Locations.SpecialLocations;
 using Modding;
 using RandomizerCore.Logic;
 using RandomizerMod.RandomizerData;
@@ -35,6 +36,7 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
         }
         RequestBuilder.OnUpdate.Subscribe(0.1f, EditCosts);
         RequestBuilder.OnUpdate.Subscribe(20.2f, DupeGrubs);
+        Finder.GetLocationOverride += MakeNMGShiny;
         MenuHolder.Hook();
     }
 
@@ -246,5 +248,21 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
     private void DupeGrubs(RequestBuilder rb)
     {
         for (var i = 0; i < GS.DupeGrubs; i++) rb.AddItemByName(ItemNames.Grub);
+    }
+
+    private void MakeNMGShiny(GetLocationEventArgs args)
+    {
+        // The Nailmaster's Glory location normally does not support costs of any kind.
+        // Turn it into a shiny to rectify this.
+        if (GS.LogicEnabled && args.LocationName == LocationNames.Nailmasters_Glory)
+        {
+            args.Current = new NailmastersGloryObjectLocation()
+            {
+                name = LocationNames.Nailmasters_Glory,
+                sceneName = SceneNames.Room_Sly_Storeroom,
+                objectName = "Sly Basement NPC",
+                elevation = 0
+            };
+        }
     }
 }
