@@ -86,6 +86,18 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
             (LocationNames.Leg_Eater, DefaultShopItems.LegEaterCharms)
         };
 
+        if (charms.Count != 40 && !rb.gs.PoolSettings.CharmNotches)
+        {
+            rb.AddToPreplaced(new VanillaDef(ItemNames.Salubras_Blessing, LocationNames.Salubra, new CostDef[]
+            {
+                new("GEO", 801),
+                new("CHARMS", charms.Count)
+            }));
+            // Remove the original Salubra's Blessing (which costs 40 charms).
+            rb.RemoveFromVanilla(ItemNames.Salubras_Blessing);
+            vanillaShopCharms[3] = (LocationNames.Salubra, DefaultShopItems.SalubraCharms | DefaultShopItems.SalubraBlessing);
+        }
+
         // Rando is not aware of the vanilla costs of shop charms, so we must restore them
         // ourselves.
         // Normally, every item placed at a shop gets a -1 geo cost set, which is replaced
@@ -205,7 +217,7 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
                 {
                     rb.RemoveFromPreplaced(oldVD);
                     Log($"Amending {oldVD.Item} at {oldVD.Location} to require {previousCharm}");
-                    var newCost = new CostDef(previousCharm, 1);
+                    var newCost = previousCharm == "KINGSOUL" ? new CostDef("WHITEFRAGMENT", 2) : new CostDef(previousCharm, 1);
                     var newCosts = oldVD.Costs is { } oldCosts
                         ? oldCosts.Append(newCost).ToArray()
                         : new[] { newCost };
