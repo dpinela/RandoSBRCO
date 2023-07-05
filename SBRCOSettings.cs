@@ -17,8 +17,13 @@ public class SBRCOSettings
     [MenuIgnore]
     public List<int> GetCharmOrder()
     {
-        var allCharms = Data.VanillaCharmOrder.Concat(Data.TranscendenceCharmOrder).ToList();
-        return Data.KthPermutation(allCharms.Count, new BigInteger(Convert.FromBase64String(SBRCode).Reverse().ToArray()))
+        var allCharms = SBRCode.Length switch
+        {
+            28 => Data.VanillaCharmOrder,
+            44 => Data.VanillaCharmOrder.Concat(Data.TranscendenceCharmOrder).ToArray(),
+            _ => throw new ArgumentException($"Invalid SBRCode length; is {SBRCode.Length}, should be either 28 or 44")
+        };
+        return Data.KthPermutation(allCharms.Length, new BigInteger(Convert.FromBase64String(SBRCode).Reverse().ToArray()))
             .ToList();
-    }   
+    }
 }
