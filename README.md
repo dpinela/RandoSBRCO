@@ -1,7 +1,8 @@
 # RandoSBRCO
 ### By BeesNation
 
-Adds Randomizer logic that allows for collection of vanilla charms in a given order.
+Adds Randomizer logic that allows for collection of vanilla charms in a given order, as well as ItemChanger costs that prevent those charms
+from being collected out of order (with two exceptions; see below).
 
 For use with `charm_select.py` from [SBRCO-Programs](https://github.com/Schyvun/SBRCO-Programs)
 by Schy💙 and Aprillomat. 
@@ -16,3 +17,9 @@ enabled such as charm dupes.
 
 The mod also can also add any number of extra grubs to the pool
 to make getting Elegy a bit more comfy.
+
+### Known issues
+
+The Fury of the Fallen and Mark of Pride chests do not currently have
+ItemChanger costs applied, and therefore these two charms can still be
+picked up out of order.
