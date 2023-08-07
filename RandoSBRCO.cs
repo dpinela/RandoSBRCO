@@ -202,6 +202,31 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
             };
         });
 
+        // If the first charm is a shop charm, we must re-add it manually to its shop,
+        // even though we don't want to add any cost to it, because we are removing
+        // all default shop charms so that we can add costs to the non-first shop
+        // charms.
+        if (charms.Count > 0 &&
+            vanillaCharmCosts.TryGetValue(Data.Charm(charms[0]), out var fgeo))
+        {
+            var firstCharm = Data.Charm(charms[0]);
+            var oldVDs = rb.Vanilla.Values.SelectMany(vds => vds.Where(vd => vd.Item == firstCharm || vd.Location == firstCharm)).ToList();
+            foreach (var oldVD in oldVDs)
+            {
+                if (oldVD.Item == firstCharm)
+                {
+                    rb.RemoveFromVanilla(oldVD);
+                    var newCosts = new List<CostDef>();
+                    if (oldVD.Costs != null)
+                    {
+                        newCosts.AddRange(oldVD.Costs);
+                    }
+                    newCosts.Add(new("GEO", fgeo));
+                    rb.AddToPreplaced(new VanillaDef(oldVD.Item, oldVD.Location, newCosts.ToArray()));
+                }
+            }
+        }
+
         for (var i = 1; i < charms.Count; i++)
         {
             var previousCharm = Data.Charm(charms[i-1]);
