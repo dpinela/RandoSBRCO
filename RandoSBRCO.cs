@@ -202,6 +202,28 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
             };
         });
 
+        // The standard IC locations for Fury and Mark of Pride
+        // do not support costs. Marking them as replaceable allows
+        // IC to turn the chests into a plain shiny with a cost.
+        // If either of these charms is the first, it will remain
+        // a chest because we don't modify its vanilla placement in that
+        // case.
+        // This is suboptimal; ideally the chest would still be there
+        // in all cases, and the shiny that comes out would have the 
+        // cost. But that is not as straightforward to implement.
+        void MakeReplaceable(LocationRequestInfo info)
+        {
+            info.onPlacementFetch += (factory, randoPlacement, placement) =>
+            {
+                if (placement is ExistingContainerPlacement ecp)
+                {
+                    ecp.Location.nonreplaceable = false;
+                }
+            };
+        }
+        rb.EditLocationRequest(LocationNames.Fury_of_the_Fallen, MakeReplaceable);
+        rb.EditLocationRequest(LocationNames.Mark_of_Pride, MakeReplaceable);
+
         // If the first charm is a shop charm, we must re-add it manually to its shop,
         // even though we don't want to add any cost to it, because we are removing
         // all default shop charms so that we can add costs to the non-first shop
