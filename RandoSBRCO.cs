@@ -298,7 +298,12 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
                     {
                         newCosts.Add(new("GEO", geo));
                     }
-                    rb.AddToPreplaced(new VanillaDef(oldVD.Item, oldVD.Location, newCosts.ToArray()));
+                    var placedItem = oldVD.Item;
+                    if (placedItem == ItemNames.Grimmchild2 && rb.gs.PoolSettings.GrimmkinFlames)
+                    {
+                        placedItem = ItemNames.Grimmchild1;
+                    }
+                    rb.AddToPreplaced(new VanillaDef(placedItem, oldVD.Location, newCosts.ToArray()));
                 }
             }
         }
