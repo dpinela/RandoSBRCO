@@ -14,7 +14,7 @@
     <Product>RandoSBRCO</Product>
     <Description>Adds Randomizer logic that allows for collection of vanilla charms in a given order</Description>
     <Copyright>Copyright © Bees Nation 2022</Copyright>
-    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <AssemblyVersion>1.1.3.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
