@@ -35,9 +35,14 @@ namespace RandoSBRCO
             MenuChangerMod.OnExitMainMenu += OnExitMenu;
         }
 
+        private Color ButtonColor() =>
+            RandoSBRCO.Instance.GS.Enabled() ? Colors.TRUE_COLOR : Colors.DEFAULT_COLOR;
+
         private bool HandleButton(MenuPage landingPage, out SmallButton button)
         {
             JumpToRPButton = new SmallButton(landingPage, Localize("RandoSBRCO"));
+            SBRCOMenu.BeforeGoBack += () => JumpToRPButton.Text.color = ButtonColor();
+            JumpToRPButton.Text.color = ButtonColor();
             JumpToRPButton.AddHideAndShowEvent(landingPage, SBRCOMenu);
             button = JumpToRPButton;
             return true;

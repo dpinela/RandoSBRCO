@@ -8,6 +8,8 @@ namespace RandoSBRCO;
 
 public class SBRCOSettings
 {
+    public bool Enabled() => LogicEnabled || DupeGrubs > 0;
+
     public bool LogicEnabled;
     public int DupeGrubs;
     
