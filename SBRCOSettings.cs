@@ -14,7 +14,7 @@ public class SBRCOSettings
     public int DupeGrubs;
     
     [MenuIgnore]
-    public string SBRCode { get; set; }
+    public string SBRCode { get; set; } = "";
 
     [MenuIgnore]
     public List<int> GetCharmOrder()

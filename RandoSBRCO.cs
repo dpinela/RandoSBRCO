@@ -34,10 +34,19 @@ public class RandoSBRCO : Mod, IGlobalSettings<SBRCOSettings>
             Log("Cannot find rando, bye");
             return;
         }
+        if (ModHooks.GetMod("RandoSettingsManager") is Mod)
+        {
+            HookRSM();
+        }
         RequestBuilder.OnUpdate.Subscribe(0.1f, EditCosts);
         RequestBuilder.OnUpdate.Subscribe(20.2f, DupeGrubs);
         Finder.GetLocationOverride += MakeNMGShiny;
         MenuHolder.Hook();
+    }
+
+    private void HookRSM()
+    {
+        RandoSettingsManager.RandoSettingsManagerMod.Instance.RegisterConnection(new RandoSettingsManagerProxy());
     }
 
     private static Cost NCharmCost(int n) =>

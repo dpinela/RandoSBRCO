@@ -66,6 +66,9 @@
     <Reference Include="RandomizerMod" Condition="Exists('$(HollowKnightRefs)/Mods/Randomizer 4')">
       <HintPath>$(HollowKnightRefs)/Mods/Randomizer 4/RandomizerMod.dll</HintPath>
     </Reference>
+    <Reference Include="RandoSettingsManager">
+      <HintPath>$(HollowKnightRefs)/Mods/RandoSettingsManager/RandoSettingsManager.dll</HintPath>
+    </Reference>
     <Reference Include="Satchel">
       <HintPath>$(HollowKnightRefs)/Mods/Satchel/Satchel.dll</HintPath>
     </Reference>

@@ -71,6 +71,22 @@ namespace RandoSBRCO
                 CharmList.Text.text += "\nWARNING: (grub cost tolerance + extra mimics) > dupe grubs, generation may fail.";
         }
 
+        internal void Apply(SBRCOSettings settings)
+        {
+            if (MEF == null)
+            {
+                RandoSBRCO.Instance.OnLoadGlobal(settings);
+            }
+            else
+            {
+                MEF.SetMenuValues(settings);
+                // SBRCode isn't included in the MEF so we must set it manually
+                CodeEntryField.SetValue(settings.SBRCode);
+                RandoSBRCO.Instance.GS.SBRCode = settings.SBRCode;
+                UpdateElements();
+            }
+        }
+
         private void ConstructMenu(MenuPage landingPage)
         {
             SBRCOMenu = new MenuPage(Localize("RandoSBRCO"), landingPage);
@@ -79,6 +95,7 @@ namespace RandoSBRCO
 
             CodeEntryField = new TextEntryField(SBRCOMenu, "SBRCode (\"base64 config\" from the generator)")
                 { InputField = { textComponent = { horizontalOverflow = HorizontalWrapMode.Overflow}}};
+            CodeEntryField.SetValue(RandoSBRCO.Instance.GS.SBRCode);
 
             CodeApplyButton = new SmallButton(SBRCOMenu, "Apply Settings");
             CodeApplyButton.OnClick += () => RandoSBRCO.Instance.GS.SBRCode = CodeEntryField.Value;
