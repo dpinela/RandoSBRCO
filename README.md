@@ -17,9 +17,3 @@ enabled such as charm dupes.
 
 The mod also can also add any number of extra grubs to the pool
 to make getting Elegy a bit more comfy.
-
-### Known issues
-
-The Fury of the Fallen and Mark of Pride chests do not currently have
-ItemChanger costs applied, and therefore these two charms can still be
-picked up out of order.
